@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — Voice Assistant</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.voice-orb{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,var(--green-neon),var(--green-bright));margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:60px;cursor:pointer;box-shadow:0 0 60px rgba(34,197,94,.4);transition:transform .2s;position:relative}
+.voice-orb:hover{transform:scale(1.05)}
+.voice-orb.listening{animation:orbPulse 1s infinite;box-shadow:0 0 90px rgba(34,197,94,.75)}
+@keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.voice-orb::before,.voice-orb::after{content:'';position:absolute;border-radius:50%;border:2px solid rgba(34,197,94,.3);animation:ripple 2s infinite}
+.voice-orb::before{width:200px;height:200px;animation-delay:0s}
+.voice-orb::after{width:252px;height:252px;animation-delay:.5s}
+@keyframes ripple{0%{transform:scale(1);opacity:1}100%{transform:scale(1.3);opacity:0}}
+.chat-messages{display:flex;flex-direction:column;gap:8px;padding:16px 0;max-height:380px;overflow-y:auto}
+.chat-bubble{padding:12px 18px;border-radius:18px;max-width:85%;font-size:14px;line-height:1.55;animation:fadeUp .3s ease}
+.chat-bubble.bot{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(74,222,128,.08));border:1px solid rgba(34,197,94,.2)}
+.chat-bubble.user{background:rgba(255,255,255,.08);border:1px solid var(--glass-border);align-self:flex-end}
+.quick-tag{cursor:pointer;transition:all .2s}.quick-tag:hover{transform:translateY(-2px)}
+</style>
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🗣 Voice Assistant</div>
+      <div class="section-sub">Talk to AgriGenie in Hindi or English</div>
+    </div>
+    <span class="tag">🇮🇳 Hindi + English</span>
+  </div>
+
+  <div class="grid-2">
+    <!-- ORB -->
+    <div class="card" style="text-align:center;padding:40px 24px">
+      <div style="margin-bottom:28px">
+        <div class="voice-orb" id="voice-orb" onclick="toggleVoice()">🎤</div>
+      </div>
+      <div id="voice-status" style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px">Tap to Speak</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:28px">बोलें या टाइप करें · Hindi & English</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <span class="tag quick-tag" onclick="askVoice('मेरी गेहूं में पीले पत्ते आ रहे हैं, क्या करूं?')">फसल समस्या</span>
+        <span class="tag quick-tag" onclick="askVoice('आज का मौसम कैसा रहेगा?')">मौसम जानकारी</span>
+        <span class="tag quick-tag" onclick="askVoice('गेहूं का आज का भाव क्या है?')">मंडी भाव</span>
+        <span class="tag sky quick-tag" onclick="askVoice('My soybean leaves are turning yellow, what should I do?')">Disease help</span>
+        <span class="tag amber quick-tag" onclick="askVoice('When should I apply fertilizer for wheat?')">Fertilizer advice</span>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="card" style="display:flex;flex-direction:column">
+      <div class="card-title">💬 Conversation</div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-bubble bot">🌾 नमस्ते! मैं AgriGenie हूं। आपकी फसल के बारे में कुछ भी पूछें।<br><small style="opacity:.7">(Hello! I am AgriGenie. Ask me anything about your crops.)</small></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <input class="form-input" id="chat-input" placeholder="Type in Hindi or English..." onkeypress="if(event.key==='Enter')sendChat()" style="flex:1" />
+        <button class="btn btn-primary" onclick="sendChat()" style="padding:12px 16px">➤</button>
+      </div>
+      <div style="margin-top:10px;text-align:center;font-size:11px;color:var(--text-muted)">Powered by Claude AI · Bilingual Support</div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+buildSidebar('voice.html');
+buildTopbar('🗣 Voice Assistant');
+
+let voiceActive = false;
+
+function toggleVoice() {
+  voiceActive = !voiceActive;
+  const orb = document.getElementById('voice-orb');
+  const status = document.getElementById('voice-status');
+  orb.classList.toggle('listening', voiceActive);
+  status.textContent = voiceActive ? '🎙 Listening...' : 'Tap to Speak';
+  if (voiceActive) {
+    setTimeout(() => {
+      voiceActive = false;
+      orb.classList.remove('listening');
+      status.textContent = 'Tap to Speak';
+      askVoice('मेरी गेहूं में पीले पत्ते आ रहे हैं, क्या करूं?');
+    }, 2600);
+  }
+}
+
+function addMessage(text, type) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-bubble ${type}`;
+  div.innerHTML = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function askVoice(question) {
+  addMessage(question, 'user');
+  addMessage('<span style="opacity:.6">🤔 सोच रहा हूं / Thinking...</span>', 'bot');
+  try {
+    const text = await askClaude(
+      'You are AgriGenie, a friendly farming assistant. Reply in the SAME language as the question (Hindi or English). Keep replies short, practical, farmer-friendly. Max 3 sentences.',
+      question,
+      250
+    );
+    document.querySelectorAll('.chat-bubble.bot').forEach(b => {
+      if (b.innerHTML.includes('सोच')) b.remove();
+    });
+    addMessage('🌾 ' + text, 'bot');
+  } catch {
+    document.querySelectorAll('.chat-bubble.bot').forEach(b => {
+      if (b.innerHTML.includes('सोच')) b.remove();
+    });
+    const isHindi = /[\u0900-\u097F]/.test(question);
+    if (isHindi) {
+      addMessage('🌾 पीले पत्ते नाइट्रोजन की कमी का संकेत हो सकते हैं। 50 किलो यूरिया प्रति एकड़ डालें। कल बारिश है, इसलिए परसों डालें।', 'bot');
+    } else {
+      addMessage('🌾 Yellow leaves indicate nitrogen deficiency. Apply 50kg Urea per acre. Wait until after tomorrow\'s rain to apply.', 'bot');
+    }
+  }
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  if (!input.value.trim()) return;
+  askVoice(input.value);
+  input.value = '';
+}
+</script>
+</body>
+</html>

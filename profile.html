@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — My Profile</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">👤 My Profile</div>
+      <div class="section-sub">Manage your farm and personal details</div>
+    </div>
+    <button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
+  </div>
+
+  <div class="grid-2">
+    <!-- PERSONAL INFO -->
+    <div class="card">
+      <div style="text-align:center;margin-bottom:24px">
+        <div id="prof-avatar" style="width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber-light));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#000;margin:0 auto 14px">RK</div>
+        <div id="prof-name-display" style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">Rajesh Kumar</div>
+        <div style="color:var(--text-muted);font-size:14px;margin-top:4px">Verified Farmer ✅</div>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="tag">🌾 10 Years Experience</span>
+          <span class="tag amber">Premium User</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="prof-name" value="Rajesh Kumar" /></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="prof-phone" value="+91 98765 43210" /></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" id="prof-email" value="rajesh.kumar@example.com" /></div>
+      <div class="form-group"><label class="form-label">Village / Location</label><input class="form-input" id="prof-loc" value="Village Pipalkhunta, Indore, MP" /></div>
+      <div class="form-group"><label class="form-label">Language Preference</label>
+        <select class="form-select"><option>Hindi (हिंदी)</option><option>English</option><option>Hinglish</option></select>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <!-- FARM DETAILS -->
+      <div class="card">
+        <div class="card-title">🏡 Farm Details</div>
+        <div class="form-group"><label class="form-label">Total Land Area</label><input class="form-input" value="10 Acres" /></div>
+        <div class="form-group"><label class="form-label">Primary Crops</label><input class="form-input" value="Wheat, Soybean, Corn, Tomato" /></div>
+        <div class="form-group"><label class="form-label">Water Source</label>
+          <select class="form-select"><option>Borewell</option><option>Canal</option><option>Rainwater</option><option>River</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Farming Type</label>
+          <select class="form-select"><option>Mixed (Traditional + Modern)</option><option>Organic</option><option>Traditional</option><option>Smart Farming</option></select>
+        </div>
+      </div>
+
+      <!-- MY STATS -->
+      <div class="card">
+        <div class="card-title">📊 My Season Stats</div>
+        <div class="grid-2" style="gap:12px">
+          <div style="text-align:center;padding:16px;background:var(--glass);border-radius:14px">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--green-neon)">47</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">AI Queries</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--glass);border-radius:14px">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--amber)">12</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Crops Tracked</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--glass);border-radius:14px">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--sky)">5</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Diseases Caught</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--glass);border-radius:14px">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#c084fc">92%</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Advisory Used</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="card">
+        <div class="card-title">🔔 Notification Settings</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px">🌧 Weather Alerts</span>
+            <div style="width:44px;height:24px;background:var(--green-neon);border-radius:12px;cursor:pointer;position:relative"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px">💧 Irrigation Reminders</span>
+            <div style="width:44px;height:24px;background:var(--green-neon);border-radius:12px;cursor:pointer;position:relative"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px">🐛 Disease Warnings</span>
+            <div style="width:44px;height:24px;background:var(--green-neon);border-radius:12px;cursor:pointer;position:relative"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px">💰 Price Alerts</span>
+            <div style="width:44px;height:24px;background:rgba(255,255,255,.15);border-radius:12px;cursor:pointer;position:relative"><div style="width:18px;height:18px;background:rgba(255,255,255,.5);border-radius:50%;position:absolute;left:3px;top:3px"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+const u = getCurrentUser();
+if (u && u.name) {
+  document.getElementById('prof-name').value = u.name;
+  document.getElementById('prof-name-display').textContent = u.name;
+  if (u.phone) document.getElementById('prof-phone').value = u.phone;
+  if (u.email) document.getElementById('prof-email').value = u.email;
+  const initials = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('prof-avatar').textContent = initials;
+}
+
+buildSidebar('profile.html');
+buildTopbar('👤 My Profile');
+
+function saveProfile() {
+  const updatedUser = {
+    ...getCurrentUser(),
+    name: document.getElementById('prof-name').value.trim() || 'Rajesh Kumar',
+    phone: document.getElementById('prof-phone').value.trim(),
+    email: document.getElementById('prof-email').value.trim(),
+  };
+  localStorage.setItem('agrigenie_user', JSON.stringify(updatedUser));
+  document.getElementById('prof-name-display').textContent = updatedUser.name;
+  const initials = updatedUser.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('prof-avatar').textContent = initials;
+  buildSidebar('profile.html');
+  showToast('✅', 'Profile Saved', 'Your farm details have been updated successfully');
+}
+</script>
+</body>
+</html>

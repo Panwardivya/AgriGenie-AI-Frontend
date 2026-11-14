@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — Disease Detection</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.upload-zone{border:2px dashed rgba(34,197,94,.4);border-radius:20px;padding:52px 36px;text-align:center;cursor:pointer;transition:all .3s;background:rgba(34,197,94,.03);position:relative}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--green-neon);background:rgba(34,197,94,.08);box-shadow:0 0 40px rgba(34,197,94,.1)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-icon{font-size:56px;margin-bottom:14px}
+.upload-text{font-family:'Syne',sans-serif;font-size:20px;font-weight:700}
+.upload-sub{font-size:13px;color:var(--text-muted);margin-top:6px}
+.result-card{background:linear-gradient(135deg,rgba(248,113,113,.1),rgba(239,68,68,.04));border:1px solid rgba(248,113,113,.3);border-radius:20px;padding:24px;animation:fadeUp .5s ease}
+.confidence-bar{height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin-top:8px}
+.confidence-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--amber),var(--amber-light));transition:width 1s ease}
+.preview-img{width:100%;border-radius:12px;margin-bottom:16px;object-fit:cover;max-height:200px}
+</style>
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">📷 AI Disease Detection</div>
+      <div class="section-sub">Upload a plant image for instant AI diagnosis</div>
+    </div>
+    <span class="tag">🎯 95.3% Accuracy</span>
+  </div>
+
+  <div class="grid-2">
+    <!-- UPLOAD -->
+    <div class="card">
+      <div class="card-title">📤 Upload Plant Image</div>
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" accept="image/*" onchange="handleImageUpload(this)" />
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Click or Drag & Drop</div>
+        <div class="upload-sub">JPG, PNG, WEBP · Max 10MB</div>
+        <div style="margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="tag">🌾 Wheat</span><span class="tag">🌽 Corn</span>
+          <span class="tag">🍅 Tomato</span><span class="tag sky">🥦 Soybean</span>
+          <span class="tag amber">+ 50 crops</span>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+        <button class="btn btn-primary btn-full" onclick="simulateDetection()">🔍 Analyze with AI</button>
+        <button class="btn btn-secondary btn-full" onclick="useSampleImage()">📋 Try Sample Image</button>
+      </div>
+    </div>
+
+    <!-- RESULTS COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="card">
+        <div class="card-title">🔬 Detection Result</div>
+        <div id="disease-result">
+          <div style="text-align:center;padding:28px;color:var(--text-muted)">
+            <div style="font-size:48px;margin-bottom:8px">🔍</div>
+            <div>Upload an image to detect diseases</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📚 Common Diseases Library</div>
+        <div class="alert-item"><div class="alert-dot red"></div><div><b style="font-size:13px">Northern Leaf Blight</b><br><span style="font-size:11px;color:var(--text-muted)">Corn, Rice · Fungal · Apply Propiconazole</span></div></div>
+        <div class="alert-item"><div class="alert-dot amber"></div><div><b style="font-size:13px">Powdery Mildew</b><br><span style="font-size:11px;color:var(--text-muted)">Wheat, Peas · Fungal · Apply Sulfur spray</span></div></div>
+        <div class="alert-item"><div class="alert-dot green"></div><div><b style="font-size:13px">Mosaic Virus</b><br><span style="font-size:11px;color:var(--text-muted)">Tomato · Viral · Remove infected plants</span></div></div>
+        <div class="alert-item"><div class="alert-dot red"></div><div><b style="font-size:13px">Bacterial Blight</b><br><span style="font-size:11px;color:var(--text-muted)">Soybean · Bacterial · Copper fungicide</span></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+buildSidebar('disease.html');
+buildTopbar('📷 Disease Detection');
+
+let sampleLoaded = false;
+
+function handleImageUpload(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('upload-zone').innerHTML = `<img src="${e.target.result}" class="preview-img"/><div style="font-size:13px;color:var(--green-neon)">✅ Image ready for analysis</div>`;
+    showToast('📷', 'Image Loaded', 'Click Analyze to detect disease');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function useSampleImage() {
+  sampleLoaded = true;
+  const zone = document.getElementById('upload-zone');
+  zone.style.borderColor = 'var(--green-neon)';
+  zone.innerHTML = `<div style="font-size:56px">🌿</div><div style="font-weight:600;font-size:15px;margin-top:10px">Sample: Corn Leaf (Blight suspected)</div><div style="font-size:12px;color:var(--text-muted);margin-top:4px">Ready to analyze</div>`;
+  showToast('📷', 'Sample Loaded', 'Corn leaf with suspected blight');
+}
+
+async function simulateDetection() {
+  const el = document.getElementById('disease-result');
+  el.innerHTML = `<div style="text-align:center;padding:20px"><div class="spinner"></div><div style="margin-top:10px;font-size:12px;color:var(--text-muted)">🔬 Analyzing with AI Vision model...</div></div>`;
+  try {
+    const text = await askClaude(
+      'You are an agricultural plant pathologist AI. Simulate a disease detection report as if you analyzed a corn/soybean leaf image. Include: disease name, confidence %, symptoms, severity level, and treatment steps. Format clearly with emojis.',
+      'Analyze this plant leaf image for disease detection'
+    );
+    el.innerHTML = `<div class="result-card"><div class="ai-label" style="color:#f87171">🔬 DETECTION RESULT</div><div class="ai-text">${text}</div></div>`;
+  } catch {
+    el.innerHTML = `<div class="result-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div><div style="font-size:16px;font-weight:700">🍂 Northern Corn Leaf Blight</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Exserohilum turcicum · Fungal</div></div>
+        <span class="tag red">High Risk</span>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;color:var(--text-muted)">Confidence Score</div>
+        <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--amber)">87.3%</div>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:87%"></div></div>
+      </div>
+      <div style="font-size:13px;line-height:1.75">
+        <b>Symptoms:</b> Tan-gray elliptical lesions, parallel margins, 1–6 inches long.<br><br>
+        <b>Treatment:</b><br>
+        ✅ Apply Propiconazole 25% EC at 1ml/L<br>
+        ✅ Spray early morning, repeat after 7 days<br>
+        ✅ Remove severely infected leaves<br>
+        ⚠️ Avoid overhead irrigation<br>
+        ⚠️ Improve field drainage
+      </div>
+    </div>`;
+  }
+  showToast('🔬', 'Analysis Complete', 'Disease detected — treatment plan ready');
+}
+</script>
+</body>
+</html>

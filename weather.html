@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — Weather</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.weather-hero{background:linear-gradient(135deg,#0c2d5e,#1a4a8a,#0f4a28);border-radius:24px;padding:32px;position:relative;overflow:hidden;margin-bottom:24px}
+.weather-hero::before{content:'⛅';position:absolute;font-size:180px;right:-20px;top:-20px;opacity:.08}
+.weather-temp{font-family:'Syne',sans-serif;font-size:72px;font-weight:800;line-height:1}
+.weather-meta{display:flex;gap:28px;margin-top:20px;flex-wrap:wrap}
+.weather-meta-item .val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--sky)}
+.weather-meta-item .lbl{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.forecast-day{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-radius:12px;margin-bottom:8px;background:var(--glass);border:1px solid var(--glass-border);transition:all .2s}
+.forecast-day:hover{background:rgba(255,255,255,.07)}
+.forecast-label{font-weight:600;font-size:14px;width:36px}
+.forecast-icon{font-size:22px}
+.forecast-temps{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.forecast-temps .hi{color:var(--amber)}.forecast-temps .lo{color:var(--sky);font-size:12px;margin-left:6px}
+</style>
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🌦 Weather Intelligence</div>
+      <div class="section-sub">Real-time data & AI-based farming alerts · Indore</div>
+    </div>
+    <span class="tag sky">📍 Auto-detected</span>
+  </div>
+
+  <!-- HERO WEATHER -->
+  <div class="weather-hero">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between">
+      <div>
+        <div style="font-size:13px;opacity:.7;margin-bottom:8px">📍 Indore, Madhya Pradesh · March 19, 2026</div>
+        <div class="weather-temp">28°C</div>
+        <div style="font-size:20px;margin-top:8px">⛅ Partly Cloudy</div>
+        <div style="font-size:13px;opacity:.7;margin-top:6px">Feels like 31°C &nbsp;·&nbsp; Max 34°C &nbsp;·&nbsp; Min 22°C</div>
+      </div>
+      <div style="font-size:110px;opacity:.25">⛅</div>
+    </div>
+    <div class="weather-meta">
+      <div class="weather-meta-item"><div class="val">72%</div><div class="lbl">Humidity</div></div>
+      <div class="weather-meta-item"><div class="val">14</div><div class="lbl">Wind km/h</div></div>
+      <div class="weather-meta-item"><div class="val">60%</div><div class="lbl">Rain Chance</div></div>
+      <div class="weather-meta-item"><div class="val">1012</div><div class="lbl">Pressure hPa</div></div>
+      <div class="weather-meta-item"><div class="val">8.2</div><div class="lbl">UV Index</div></div>
+      <div class="weather-meta-item"><div class="val">12 km</div><div class="lbl">Visibility</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- 7-DAY FORECAST -->
+    <div class="card">
+      <div class="card-title">📅 7-Day Forecast</div>
+      <div class="forecast-day"><span class="forecast-label">Thu</span><span class="forecast-icon">⛅</span><span class="forecast-temps"><span class="hi">28°</span><span class="lo">22°</span></span><span class="tag sky">60% rain</span></div>
+      <div class="forecast-day"><span class="forecast-label">Fri</span><span class="forecast-icon">🌧</span><span class="forecast-temps"><span class="hi">24°</span><span class="lo">19°</span></span><span class="tag red">Heavy Rain</span></div>
+      <div class="forecast-day"><span class="forecast-label">Sat</span><span class="forecast-icon">🌦</span><span class="forecast-temps"><span class="hi">26°</span><span class="lo">20°</span></span><span class="tag amber">30%</span></div>
+      <div class="forecast-day"><span class="forecast-label">Sun</span><span class="forecast-icon">☀️</span><span class="forecast-temps"><span class="hi">32°</span><span class="lo">23°</span></span><span class="tag">Clear</span></div>
+      <div class="forecast-day"><span class="forecast-label">Mon</span><span class="forecast-icon">☀️</span><span class="forecast-temps"><span class="hi">34°</span><span class="lo">25°</span></span><span class="tag">Clear</span></div>
+      <div class="forecast-day"><span class="forecast-label">Tue</span><span class="forecast-icon">⛅</span><span class="forecast-temps"><span class="hi">30°</span><span class="lo">22°</span></span><span class="tag amber">40%</span></div>
+      <div class="forecast-day"><span class="forecast-label">Wed</span><span class="forecast-icon">🌧</span><span class="forecast-temps"><span class="hi">25°</span><span class="lo">18°</span></span><span class="tag red">Rain</span></div>
+    </div>
+
+    <!-- AI ALERTS -->
+    <div class="card">
+      <div class="card-title">🚨 AI Farming Alerts</div>
+      <button class="btn btn-primary" style="margin-bottom:16px" onclick="getWeatherAI()">🤖 Get AI Weather Advice</button>
+      <div class="alert-item"><div class="alert-dot red"></div><div><b style="font-size:13px">Skip irrigation tomorrow</b><br><span style="font-size:11px;color:var(--text-muted)">60% rain — save water & avoid root rot</span></div></div>
+      <div class="alert-item"><div class="alert-dot amber"></div><div><b style="font-size:13px">High UV alert Sunday</b><br><span style="font-size:11px;color:var(--text-muted)">Apply sunshade for tomato seedlings</span></div></div>
+      <div class="alert-item"><div class="alert-dot amber"></div><div><b style="font-size:13px">Fungal risk post-rain</b><br><span style="font-size:11px;color:var(--text-muted)">Apply fungicide Friday evening</span></div></div>
+      <div class="alert-item"><div class="alert-dot green"></div><div><b style="font-size:13px">Harvest window</b><br><span style="font-size:11px;color:var(--text-muted)">Dry Sunday–Monday ideal for harvesting</span></div></div>
+      <div id="weather-ai-result"></div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+buildSidebar('weather.html');
+buildTopbar('🌦 Weather Intelligence');
+
+async function getWeatherAI() {
+  const el = document.getElementById('weather-ai-result');
+  el.innerHTML = '<div style="margin-top:14px;text-align:center"><div class="spinner"></div></div>';
+  try {
+    const text = await askClaude(
+      'You are a weather-based farming advisor for Indian farmers. Give specific actionable farming steps based on weather. Be concise and practical.',
+      'Weather in Indore: 28°C, 72% humidity, 60% rain chance tomorrow, dry Sunday-Monday. I grow wheat and soybean. Give 4 specific farming actions for this week.'
+    );
+    el.innerHTML = `<div class="ai-result" style="margin-top:14px"><div class="ai-label">🤖 AI WEATHER ADVICE</div><div class="ai-text">${text}</div></div>`;
+  } catch {
+    el.innerHTML = `<div class="ai-result" style="margin-top:14px"><div class="ai-text">🌧 Delay fertilizer — rain will wash away nutrients.<br>🌾 Plan wheat harvest for Sunday-Monday dry window.<br>🍄 Apply fungicide Friday evening to prevent post-rain fungal outbreak.<br>💧 Check field drainage before Friday rain.</div></div>`;
+  }
+  showToast('🌦', 'Weather Advice Ready', 'Check AI recommendations');
+}
+</script>
+</body>
+</html>

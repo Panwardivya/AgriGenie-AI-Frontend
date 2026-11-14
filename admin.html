@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>AgriGenie AI — Admin Panel</title>
+  <link rel="stylesheet" href="shared.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .admin-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border-bottom: 1px solid var(--glass-border);
+      transition: background .2s;
+      cursor: default
+    }
+
+    .admin-row:hover {
+      background: var(--glass)
+    }
+
+    .admin-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #000;
+      flex-shrink: 0
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--glass-border)
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="sidebar" id="sidebar"></nav>
+  <header class="topbar" id="topbar"></header>
+
+  <main class="main">
+    <div class="section-header">
+      <div>
+        <div class="section-title">⚙️ Admin Panel</div>
+        <div class="section-sub">Monitor farmer engagement & system analytics</div>
+      </div>
+      <span class="tag amber">👑 Super Admin</span>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card green">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" style="color:var(--green-neon)">2,847</div>
+        <div class="stat-label">Total Users</div>
+        <div class="stat-change up">↑ 12% this month</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" style="color:var(--amber)">1,203</div>
+        <div class="stat-label">Active Today</div>
+        <div class="stat-change up">↑ 8.4%</div>
+      </div>
+      <div class="stat-card sky">
+        <div class="stat-icon">🤖</div>
+        <div class="stat-value" style="color:var(--sky)">18.4K</div>
+        <div class="stat-label">AI Queries</div>
+        <div class="stat-change up">↑ 34%</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon">📷</div>
+        <div class="stat-value" style="color:#f87171">3,291</div>
+        <div class="stat-label">Disease Scans</div>
+        <div class="stat-change up">↑ 21%</div>
+      </div>
+    </div>
+
+    <!-- CHART + USERS -->
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-title">📈 User Growth (Monthly)</div>
+        <div class="chart-wrap"><canvas id="adminChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔥 Feature Usage Breakdown</div>
+        <div class="chart-wrap"><canvas id="featureChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- RECENT USERS TABLE -->
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">👤 Recent Users</div>
+      <div class="table-header">
+        <div style="flex:1">User</div>
+        <div style="width:120px">Location</div>
+        <div style="width:100px">Crops</div>
+        <div style="width:80px">Queries</div>
+        <div style="width:80px">Status</div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-avatar" style="background:linear-gradient(135deg,var(--amber),var(--amber-light))">RK</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Rajesh Kumar</div>
+          <div style="font-size:11px;color:var(--text-muted)">rajesh@example.com</div>
+        </div>
+        <div style="width:120px;font-size:13px">Indore, MP</div>
+        <div style="width:100px;font-size:13px">Wheat, Soy</div>
+        <div style="width:80px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px">47</div>
+        <div style="width:80px"><span class="tag">Active</span></div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-avatar" style="background:linear-gradient(135deg,var(--sky),#60a5fa)">SP</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Suresh Patel</div>
+          <div style="font-size:11px;color:var(--text-muted)">suresh@example.com</div>
+        </div>
+        <div style="width:120px;font-size:13px">Bhopal, MP</div>
+        <div style="width:100px;font-size:13px">Cotton</div>
+        <div style="width:80px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px">23</div>
+        <div style="width:80px"><span class="tag">Active</span></div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-avatar" style="background:linear-gradient(135deg,#a855f7,#c084fc)">AM</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Anita Mehta</div>
+          <div style="font-size:11px;color:var(--text-muted)">anita@example.com</div>
+        </div>
+        <div style="width:120px;font-size:13px">Ujjain, MP</div>
+        <div style="width:100px;font-size:13px">Onion</div>
+        <div style="width:80px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px">8</div>
+        <div style="width:80px"><span class="tag amber">New</span></div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-avatar" style="background:linear-gradient(135deg,#f87171,#ef4444)">GS</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Ganesh Sharma</div>
+          <div style="font-size:11px;color:var(--text-muted)">ganesh@example.com</div>
+        </div>
+        <div style="width:120px;font-size:13px">Ratlam, MP</div>
+        <div style="width:100px;font-size:13px">Paddy</div>
+        <div style="width:80px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px">62</div>
+        <div style="width:80px"><span class="tag sky">Premium</span></div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-avatar" style="background:linear-gradient(135deg,var(--green-neon),var(--green-glow))">PK
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">Priya Kumari</div>
+          <div style="font-size:11px;color:var(--text-muted)">priya@example.com</div>
+        </div>
+        <div style="width:120px;font-size:13px">Dewas, MP</div>
+        <div style="width:100px;font-size:13px">Garlic, Chili</div>
+        <div style="width:80px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px">31</div>
+        <div style="width:80px"><span class="tag">Active</span></div>
+      </div>
+    </div>
+
+    <!-- SYSTEM STATUS -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">⚡ System Status</div>
+        <div class="alert-item">
+          <div class="alert-dot green"></div>
+          <div><b style="font-size:13px">AI Advisory API</b><br><span
+              style="font-size:11px;color:var(--text-muted)">99.8% uptime · 240ms avg</span></div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-dot green"></div>
+          <div><b style="font-size:13px">Disease Detection</b><br><span
+              style="font-size:11px;color:var(--text-muted)">100% uptime · 1.2s avg</span></div>
+        </div>
+        <div class="alert-item">
+          <div class="alert-dot amber"></div>
+          <div><b style="font-size:13px">Weather API</b><br><span style="font-size:11px;color:var(--text-muted)">98.2%
+              uptime · minor delay</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📱 Device Breakdown</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>📱
+                Mobile</span><span style="font-weight:700">68%</span></div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:68%"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>💻
+                Desktop</span><span style="font-weight:700">24%</span></div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:24%;background:linear-gradient(90deg,var(--sky),#60a5fa)"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>📟
+                Tablet</span><span style="font-weight:700">8%</span></div>
+            <div class="progress-bar">
+              <div class="progress-fill"
+                style="width:8%;background:linear-gradient(90deg,var(--amber),var(--amber-light))"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🌐 Top Regions</div>
+        <div class="price-row" style="margin-bottom:6px"><span style="font-size:13px">Indore, MP</span><span
+            style="font-family:'Syne',sans-serif;font-weight:700">842</span></div>
+        <div class="price-row" style="margin-bottom:6px"><span style="font-size:13px">Bhopal, MP</span><span
+            style="font-family:'Syne',sans-serif;font-weight:700">621</span></div>
+        <div class="price-row" style="margin-bottom:6px"><span style="font-size:13px">Ujjain, MP</span><span
+            style="font-family:'Syne',sans-serif;font-weight:700">418</span></div>
+        <div class="price-row" style="margin-bottom:6px"><span style="font-size:13px">Jabalpur, MP</span><span
+            style="font-family:'Syne',sans-serif;font-weight:700">312</span></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    buildSidebar('admin.html');
+    buildTopbar('⚙️ Admin Panel');
+
+    const co = {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {legend: {labels: {color: '#86efac', font: {size: 11}}}},
+      scales: {
+        x: {ticks: {color: '#86efac'}, grid: {color: 'rgba(255,255,255,.04)'}},
+        y: {ticks: {color: '#86efac'}, grid: {color: 'rgba(255,255,255,.04)'}}
+      }
+    };
+
+    new Chart(document.getElementById('adminChart'), {
+      type: 'line',
+      data: {
+        labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+        datasets: [{
+          label: 'Total Users', data: [800, 1100, 1400, 1800, 2200, 2600, 2847],
+          borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,.1)',
+          tension: .4, fill: true, pointBackgroundColor: '#22c55e', pointRadius: 5
+        }]
+      },
+      options: co
+    });
+
+    new Chart(document.getElementById('featureChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['AI Advisory', 'Disease Detection', 'Weather', 'Market Prices', 'Voice'],
+        datasets: [{
+          data: [35, 25, 18, 14, 8],
+          backgroundColor: ['#22c55e', '#f59e0b', '#38bdf8', '#f87171', '#c084fc'],
+          borderColor: 'rgba(0,0,0,.3)', borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {legend: {labels: {color: '#86efac', font: {size: 11}}}}
+      }
+    });
+
+    showToast('👑', 'Admin Dashboard', '2,847 farmers using AgriGenie today');
+  </script>
+</body>
+
+</html>

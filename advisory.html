@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — AI Advisory</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.advisory-step{display:flex;align-items:flex-start;gap:16px;padding:16px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-border);margin-bottom:10px;animation:fadeUp .4s ease both}
+.step-num{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--green-neon),var(--green-glow));color:#000;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.step-content h4{font-weight:600;font-size:14px;margin-bottom:4px}
+.step-content p{font-size:13px;color:var(--text-muted);line-height:1.5}
+</style>
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🤖 AI Smart Advisory</div>
+      <div class="section-sub">Personalized crop recommendations powered by AI</div>
+    </div>
+    <span class="tag">✨ Powered by Claude AI</span>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <!-- INPUT FORM -->
+    <div class="card">
+      <div class="card-title">📋 Enter Crop Details</div>
+      <div class="form-group"><label class="form-label">Crop Type</label>
+        <select class="form-select" id="adv-crop">
+          <option>Wheat (गेहूं)</option><option>Rice (धान)</option><option>Corn / Maize (मक्का)</option>
+          <option>Soybean (सोयाबीन)</option><option>Cotton (कपास)</option><option>Tomato (टमाटर)</option>
+          <option>Onion (प्याज)</option><option>Potato (आलू)</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Soil Type</label>
+        <select class="form-select" id="adv-soil">
+          <option>Black Cotton Soil (काली मिट्टी)</option><option>Red Laterite Soil</option>
+          <option>Alluvial Soil (जलोढ़ मिट्टी)</option><option>Sandy Loam</option><option>Clay Soil</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Growth Stage</label>
+        <select class="form-select" id="adv-stage">
+          <option>Seedling (बीज अंकुरण)</option><option>Vegetative Growth</option>
+          <option>Flowering</option><option>Grain Filling</option><option>Harvest Ready</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Location</label>
+        <input class="form-input" id="adv-location" value="Indore, Madhya Pradesh" />
+      </div>
+      <div class="form-group"><label class="form-label">Current Problem (Optional)</label>
+        <input class="form-input" id="adv-problem" placeholder="e.g., yellowing leaves, pest attack..." />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="getAIAdvisory()">⚡ Get AI Advisory</button>
+    </div>
+
+    <!-- AI RESULT -->
+    <div class="card">
+      <div class="card-title">🧠 AI Recommendation</div>
+      <div id="advisory-result">
+        <div style="text-align:center;padding:40px 20px;color:var(--text-muted)">
+          <div style="font-size:48px;margin-bottom:12px">🤖</div>
+          <div>Fill in your crop details and click Get AI Advisory</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOIL HEALTH -->
+  <div class="card">
+    <div class="card-title">📊 Soil Health Metrics</div>
+    <div class="grid-4">
+      <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">pH Level</div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700">6.8</div><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div><div style="font-size:11px;color:var(--green-neon);margin-top:4px">Optimal</div></div>
+      <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">Nitrogen (N)</div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700">45%</div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:linear-gradient(90deg,var(--amber),var(--amber-light))"></div></div><div style="font-size:11px;color:var(--amber);margin-top:4px">Low — Apply Urea</div></div>
+      <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">Phosphorus (P)</div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700">72%</div><div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div><div style="font-size:11px;color:var(--green-neon);margin-top:4px">Good</div></div>
+      <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">Potassium (K)</div><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700">58%</div><div class="progress-bar"><div class="progress-fill" style="width:58%"></div></div><div style="font-size:11px;color:var(--amber);margin-top:4px">Moderate</div></div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+buildSidebar('advisory.html');
+buildTopbar('🤖 AI Advisory');
+
+async function getAIAdvisory() {
+  const crop     = document.getElementById('adv-crop').value;
+  const soil     = document.getElementById('adv-soil').value;
+  const stage    = document.getElementById('adv-stage').value;
+  const location = document.getElementById('adv-location').value;
+  const problem  = document.getElementById('adv-problem').value;
+  const el = document.getElementById('advisory-result');
+  el.innerHTML = '<div style="text-align:center;padding:30px"><div class="spinner"></div><div style="margin-top:12px;font-size:13px;color:var(--text-muted)">AI analyzing your crop data...</div></div>';
+  try {
+    const text = await askClaude(
+      'You are AgriGenie AI, expert agricultural advisor for Indian farmers. Give concise practical advice in simple English. Format with clear sections using emojis. Keep it actionable.',
+      `Crop: ${crop}\nSoil: ${soil}\nStage: ${stage}\nLocation: ${location}\nProblem: ${problem||'General advisory'}\nProvide: 1) Fertilizer 2) Irrigation 3) Pest watch 4) Immediate actions. Be specific with quantities and timing.`
+    );
+    el.innerHTML = `<div class="ai-result"><div class="ai-label">🤖 AI ADVISORY RESULT</div><div class="ai-text">${text}</div></div>`;
+  } catch {
+    el.innerHTML = `<div class="ai-result">
+      <div class="ai-label">🤖 AI ADVISORY (DEMO)</div>
+      <div class="advisory-step" style="animation-delay:.1s"><div class="step-num">1</div><div class="step-content"><h4>💊 Fertilizer Plan</h4><p>Apply 50 kg Urea + 25 kg DAP per acre. Nitrogen is low (45%) — prioritize top-dressing within 3 days. Avoid during rain forecast tomorrow.</p></div></div>
+      <div class="advisory-step" style="animation-delay:.2s"><div class="step-num">2</div><div class="step-content"><h4>💧 Irrigation Schedule</h4><p>Skip tomorrow due to 60% rain forecast. Next irrigation: Saturday morning 6–8 AM. Use drip to conserve 30% water.</p></div></div>
+      <div class="advisory-step" style="animation-delay:.3s"><div class="step-num">3</div><div class="step-content"><h4>🐛 Pest Watch</h4><p>High aphid risk post-rain. Spray Imidacloprid 0.5ml/L on Friday evening as preventive.</p></div></div>
+      <div class="advisory-step" style="animation-delay:.4s"><div class="step-num">4</div><div class="step-content"><h4>✅ Immediate Actions</h4><p>1. Prepare fertilizer mix today. 2. Check drainage before rain. 3. Photograph yellow leaves for disease check.</p></div></div>
+    </div>`;
+  }
+  showToast('🤖', 'Advisory Ready', `Plan generated for ${crop}`);
+}
+</script>
+</body>
+</html>

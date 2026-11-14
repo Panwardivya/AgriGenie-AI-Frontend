@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriGenie AI — Analytics</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<nav class="sidebar" id="sidebar"></nav>
+<header class="topbar" id="topbar"></header>
+
+<main class="main">
+  <div class="section-header">
+    <div>
+      <div class="section-title">📉 Farm Analytics</div>
+      <div class="section-sub">Yield performance, income trends & crop insights</div>
+    </div>
+    <select class="form-select" style="width:auto;padding:8px 16px">
+      <option>2025–26 Season</option><option>2024–25 Season</option>
+    </select>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="stat-card green"><div class="stat-icon">📦</div><div class="stat-value" style="color:var(--green-neon)">48Q</div><div class="stat-label">Total Yield</div><div class="stat-change up">↑ 18% vs last year</div></div>
+    <div class="stat-card amber"><div class="stat-icon">💰</div><div class="stat-value" style="color:var(--amber)">₹2.4L</div><div class="stat-label">Est. Income</div><div class="stat-change up">↑ 22%</div></div>
+    <div class="stat-card sky"><div class="stat-icon">💊</div><div class="stat-value" style="color:var(--sky)">₹18K</div><div class="stat-label">Input Cost</div><div class="stat-change up">↓ 8% saved</div></div>
+    <div class="stat-card red"><div class="stat-icon">🌿</div><div class="stat-value" style="color:#f87171">3</div><div class="stat-label">Diseases Detected</div><div class="stat-change up">All treated</div></div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-title">📈 Monthly Yield (Quintals)</div>
+      <div class="chart-wrap"><canvas id="yieldChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💰 Income vs Input Cost (₹K)</div>
+      <div class="chart-wrap"><canvas id="incomeChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CHART ROW 2 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🌾 Crop Performance Breakdown</div>
+      <div class="chart-wrap"><canvas id="cropChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Soil Health Over Season</div>
+      <div class="chart-wrap"><canvas id="soilChart"></canvas></div>
+    </div>
+  </div>
+</main>
+
+<script src="shared.js"></script>
+<script>
+buildSidebar('analytics.html');
+buildTopbar('📉 Analytics');
+
+const chartOpts = (extra={}) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{ labels:{ color:'#86efac', font:{ size:12 } } } },
+  scales:{
+    x:{ ticks:{ color:'#86efac' }, grid:{ color:'rgba(255,255,255,.04)' } },
+    y:{ ticks:{ color:'#86efac' }, grid:{ color:'rgba(255,255,255,.04)' } }
+  }, ...extra
+});
+
+new Chart(document.getElementById('yieldChart'), {
+  type:'bar',
+  data:{ labels:['Oct','Nov','Dec','Jan','Feb','Mar'],
+    datasets:[{ label:'Yield (Qtl)', data:[4,7,9,12,8,8],
+      backgroundColor:'rgba(34,197,94,.65)', borderColor:'#22c55e',
+      borderWidth:2, borderRadius:6 }] },
+  options: chartOpts()
+});
+
+new Chart(document.getElementById('incomeChart'), {
+  type:'line',
+  data:{ labels:['Oct','Nov','Dec','Jan','Feb','Mar'],
+    datasets:[
+      { label:'Income ₹K', data:[8,18,24,32,20,22], borderColor:'#f59e0b',
+        backgroundColor:'rgba(245,158,11,.1)', tension:.4, fill:true },
+      { label:'Input Cost ₹K', data:[5,6,4,5,5,3], borderColor:'#f87171',
+        backgroundColor:'rgba(248,113,113,.1)', tension:.4, fill:true }
+    ] },
+  options: chartOpts()
+});
+
+new Chart(document.getElementById('cropChart'), {
+  type:'bar',
+  data:{ labels:['Wheat','Soybean','Corn','Tomato'],
+    datasets:[{ label:'Yield Qtl', data:[20,14,8,6],
+      backgroundColor:['rgba(34,197,94,.7)','rgba(245,158,11,.7)','rgba(56,189,248,.7)','rgba(248,113,113,.7)'],
+      borderRadius:8 }] },
+  options: chartOpts({ indexAxis:'y' })
+});
+
+new Chart(document.getElementById('soilChart'), {
+  type:'radar',
+  data:{
+    labels:['pH','Nitrogen','Phosphorus','Potassium','Organic Matter','Moisture'],
+    datasets:[{
+      label:'Current', data:[68,45,72,58,62,68],
+      backgroundColor:'rgba(34,197,94,.15)', borderColor:'#22c55e',
+      pointBackgroundColor:'#22c55e', pointRadius:4
+    },{
+      label:'Optimal', data:[70,80,70,70,75,70],
+      backgroundColor:'rgba(56,189,248,.1)', borderColor:'#38bdf8',
+      pointBackgroundColor:'#38bdf8', pointRadius:4
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#86efac' } } },
+    scales:{ r:{ ticks:{ color:'#86efac', backdropColor:'transparent' }, grid:{ color:'rgba(255,255,255,.08)' }, pointLabels:{ color:'#86efac', font:{ size:11 } } } }
+  }
+});
+</script>
+</body>
+</html>
